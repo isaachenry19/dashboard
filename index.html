@@ -14,7 +14,7 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
 .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
 .grid-1 { margin-bottom: 12px; }
 .card { background: #161616; border-radius: 16px; padding: 18px; border: 0.5px solid #2a2a2a; }
-.card-label { font-size: 10px; color: #444; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+.card-label { font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; font-weight: 500; }
 .big-num { font-size: 32px; font-weight: 600; }
 .sub { font-size: 13px; color: #666; margin-top: 4px; line-height: 1.5; }
 .pill { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 500; margin-top: 8px; }
@@ -35,6 +35,7 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
 .author { font-size: 12px; color: #444; margin-top: 8px; }
 .job-title { font-size: 13px; color: #ddd; font-weight: 500; }
 .job-co { font-size: 12px; color: #444; margin-top: 2px; }
+.ig-btn { display: inline-block; margin-top: 12px; padding: 8px 16px; background: #1a1a2e; color: #a78bfa; border-radius: 99px; font-size: 12px; text-decoration: none; border: 0.5px solid #2a2a4a; }
 @media(max-width: 600px) {
   .grid-3 { grid-template-columns: 1fr; }
   .grid-2 { grid-template-columns: 1fr; }
@@ -44,24 +45,23 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
 <body>
 
 <div class="header">
-  <div class="greeting">Buenos dias, Isaac</div>
+  <div class="greeting" id="saludo">Hola, Isaac</div>
   <div class="date" id="fecha"></div>
 </div>
 
 <div class="grid-3">
   <div class="card">
-    <div class="card-label">Clima Panama</div>
-    <div class="big-num" id="temp">31°C</div>
-    <div class="sub" id="clima-desc">Parcialmente nublado</div>
-    <span class="pill amber" id="humedad">Humedad 80%</span>
+    <div class="card-label">🌤️ Clima Panama</div>
+    <div class="big-num">31°C</div>
+    <div class="sub">Parcialmente nublado</div>
+    <span class="pill amber">Humedad 80%</span>
   </div>
   <div class="card">
-    <div class="card-label">Tauro hoy</div>
-    <div style="font-size:22px; margin-bottom:8px;">♉</div>
-    <div class="sub" style="color:#c0b0e0;">Venus favorece decisiones economicas. Confia en tu intuicion hoy — esta afilada y clara.</div>
+    <div class="card-label">♉ Tauro hoy</div>
+    <div class="sub" style="color:#c0b0e0; margin-top:0;">Venus favorece decisiones economicas. Confia en tu intuicion hoy — esta afilada y clara.</div>
   </div>
   <div class="card">
-    <div class="card-label">Frase del dia</div>
+    <div class="card-label">💬 Frase del dia</div>
     <div class="italic">"El exito no es la llave de la felicidad. La felicidad es la llave del exito."</div>
     <div class="author">— Albert Schweitzer</div>
   </div>
@@ -69,47 +69,40 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
 
 <div class="grid-2">
   <div class="card">
-    <div class="card-label">Noticias globales</div>
-    <div id="news-global">
-      <div class="news-item"><div class="news-title">Cumbre del G7 debate regulaciones para inteligencia artificial</div><div class="news-src">BBC World</div></div>
-      <div class="news-item"><div class="news-title">Mercados asiaticos cierran al alza tras datos positivos</div><div class="news-src">Reuters</div></div>
-      <div class="news-item"><div class="news-title">NASA anuncia nueva mision lunar para 2027</div><div class="news-src">BBC Science</div></div>
-    </div>
+    <div class="card-label">🌍 Noticias globales</div>
+    <div class="news-item"><div class="news-title">Cumbre del G7 debate regulaciones para inteligencia artificial</div><div class="news-src">BBC World</div></div>
+    <div class="news-item"><div class="news-title">Mercados asiaticos cierran al alza tras datos positivos</div><div class="news-src">Reuters</div></div>
+    <div class="news-item"><div class="news-title">NASA anuncia nueva mision lunar para 2027</div><div class="news-src">BBC Science</div></div>
   </div>
   <div class="card">
-    <div class="card-label">Panama hoy</div>
-    <div id="news-panama">
-      <div class="news-item"><div class="news-title">Canal de Panama reporta record de trafico en primer trimestre</div><div class="news-src">La Estrella</div></div>
-      <div class="news-item"><div class="news-title">Asamblea Nacional aprueba presupuesto para infraestructura vial</div><div class="news-src">TVN Panama</div></div>
-      <div class="news-item"><div class="news-title">Ministerio de Salud lanza campana de vacunacion nacional</div><div class="news-src">La Prensa</div></div>
-    </div>
+    <div class="card-label">🇵🇦 Panama hoy</div>
+    <div class="news-item"><div class="news-title">Canal de Panama reporta record de trafico en primer trimestre</div><div class="news-src">La Estrella</div></div>
+    <div class="news-item"><div class="news-title">Asamblea Nacional aprueba presupuesto para infraestructura vial</div><div class="news-src">TVN Panama</div></div>
+    <div class="news-item"><div class="news-title">Ministerio de Salud lanza campana de vacunacion nacional</div><div class="news-src">La Prensa</div></div>
   </div>
 </div>
 
 <div class="grid-2">
   <div class="card">
-    <div class="card-label">Crypto</div>
-    <div id="crypto">
-      <div class="row"><span class="row-label">Bitcoin</span><div style="text-align:right"><div class="row-val">Cargando...</div></div></div>
-    </div>
+    <div class="card-label">₿ Crypto</div>
+    <div id="crypto"><div class="sub">Cargando...</div></div>
   </div>
   <div class="card">
-    <div class="card-label">Tipo de cambio</div>
-    <div id="fx">
-      <div class="row"><span class="row-label">Cargando...</span></div>
-    </div>
+    <div class="card-label">💱 Tipo de cambio</div>
+    <div id="fx"><div class="sub">Cargando...</div></div>
   </div>
 </div>
 
 <div class="grid-2">
   <div class="card">
-    <div class="card-label">Trafico Panama</div>
+    <div class="card-label">🚦 Trafico Panama</div>
     <div class="row"><div style="display:flex;align-items:center;gap:10px;"><div class="traffic-dot" style="background:#f87171"></div><span class="row-label">Corredor Sur — congestion alta</span></div></div>
     <div class="row"><div style="display:flex;align-items:center;gap:10px;"><div class="traffic-dot" style="background:#fbbf24"></div><span class="row-label">Via Espana — trafico moderado</span></div></div>
     <div class="row"><div style="display:flex;align-items:center;gap:10px;"><div class="traffic-dot" style="background:#3ecf8e"></div><span class="row-label">Transistmica — flujo normal</span></div></div>
+    <a class="ig-btn" href="https://www.instagram.com/traficopanama" target="_blank">Ver Instagram en vivo →</a>
   </div>
   <div class="card">
-    <div class="card-label">Pelicula de la semana</div>
+    <div class="card-label">🎬 Pelicula de la semana</div>
     <div style="font-size:15px;font-weight:500;margin-bottom:6px;">Dune: Part Two</div>
     <div style="display:flex;gap:6px;margin-bottom:8px;"><span class="pill amber">Sci-Fi</span><span class="pill blue">2024</span></div>
     <div class="sub">Una epica visual imprescindible. Villeneuve lleva la saga al siguiente nivel.</div>
@@ -118,7 +111,7 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
 
 <div class="grid-1">
   <div class="card">
-    <div class="card-label">Oportunidades laborales en Panama</div>
+    <div class="card-label">💼 Oportunidades laborales en Panama</div>
     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0 24px;">
       <div class="row" style="flex-direction:column;align-items:flex-start;">
         <div class="job-title">Analista de Datos</div>
@@ -142,26 +135,32 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
 
 <div class="grid-1">
   <div class="card" style="text-align:center;">
-    <div class="card-label">Dato curioso del dia</div>
+    <div class="card-label">🧠 Dato curioso del dia</div>
     <div class="italic" style="margin-top:6px;">"El cerebro humano genera mas impulsos electricos en un dia que todos los telefonos del mundo combinados. Eres la tecnologia mas avanzada del planeta."</div>
   </div>
 </div>
 
 <script>
-const d = new Date();
+const now = new Date();
+const offsetPanama = -5;
+const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+const panama = new Date(utc + (3600000 * offsetPanama));
+const hora = panama.getHours();
+
 const dias = ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'];
 const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-document.getElementById('fecha').textContent = `${dias[d.getDay()]}, ${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
+document.getElementById('fecha').textContent = `${dias[panama.getDay()]}, ${panama.getDate()} de ${meses[panama.getMonth()]} de ${panama.getFullYear()}`;
+
+let saludo = 'Buenas noches';
+if (hora >= 5 && hora < 12) saludo = 'Buenos dias';
+else if (hora >= 12 && hora < 19) saludo = 'Buenas tardes';
+document.getElementById('saludo').textContent = `${saludo}, Isaac 👋`;
 
 async function loadCrypto() {
   try {
     const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24hr_change=true');
     const data = await r.json();
-    const items = [
-      {name:'Bitcoin', id:'bitcoin'},
-      {name:'Ethereum', id:'ethereum'},
-      {name:'Solana', id:'solana'}
-    ];
+    const items = [{name:'Bitcoin',id:'bitcoin'},{name:'Ethereum',id:'ethereum'},{name:'Solana',id:'solana'}];
     document.getElementById('crypto').innerHTML = items.map(i => {
       const chg = data[i.id].usd_24h_change.toFixed(1);
       const cls = chg >= 0 ? 'green' : 'red';
@@ -175,12 +174,7 @@ async function loadFX() {
   try {
     const r = await fetch('https://api.frankfurter.app/latest?from=USD&to=EUR,GBP,JPY,MXN');
     const data = await r.json();
-    const pairs = [
-      {pair:'USD / EUR', key:'EUR'},
-      {pair:'USD / GBP', key:'GBP'},
-      {pair:'USD / JPY', key:'JPY'},
-      {pair:'USD / MXN', key:'MXN'}
-    ];
+    const pairs = [{pair:'USD / EUR',key:'EUR'},{pair:'USD / GBP',key:'GBP'},{pair:'USD / JPY',key:'JPY'},{pair:'USD / MXN',key:'MXN'}];
     document.getElementById('fx').innerHTML = pairs.map(p =>
       `<div class="row"><span class="row-label">${p.pair}</span><span class="row-val">${data.rates[p.key].toFixed(2)}</span></div>`
     ).join('');
