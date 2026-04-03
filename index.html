@@ -22,7 +22,6 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
 .red { background: #2a0d0d; color: #f87171; }
 .amber { background: #2a1e0d; color: #fbbf24; }
 .blue { background: #0d1a2a; color: #60a5fa; }
-.purple { background: #1a0d2a; color: #c084fc; }
 .row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 0.5px solid #1f1f1f; }
 .row:last-child { border-bottom: none; }
 .row-label { font-size: 13px; color: #aaa; }
@@ -31,7 +30,7 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
 .news-item:last-child { border-bottom: none; }
 .news-title { font-size: 13px; color: #ddd; line-height: 1.4; }
 .news-src { font-size: 11px; color: #444; margin-top: 3px; }
-.news-link { text-decoration: none; color: inherit; }
+.news-link { text-decoration: none; color: inherit; display: block; }
 .news-link:hover .news-title { color: #60a5fa; }
 .traffic-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .italic { font-style: italic; color: #bbb; font-size: 14px; line-height: 1.6; }
@@ -45,8 +44,8 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
 .ig-btn { display: inline-block; margin-top: 12px; padding: 8px 16px; background: #1a1a2e; color: #a78bfa; border-radius: 99px; font-size: 12px; text-decoration: none; border: 0.5px solid #2a2a4a; }
 .loading { color: #444; font-size: 13px; font-style: italic; }
 .movie-row { display: flex; gap: 14px; align-items: flex-start; }
-.movie-poster { width: 52px; height: 72px; background: #2a2a2a; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; overflow: hidden; }
-.movie-poster img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+.movie-poster { width: 60px; height: 90px; background: #2a2a2a; border-radius: 8px; flex-shrink: 0; overflow: hidden; }
+.movie-poster img { width: 100%; height: 100%; object-fit: cover; }
 @media(max-width: 600px) {
   .grid-3 { grid-template-columns: 1fr; }
   .grid-2 { grid-template-columns: 1fr; }
@@ -69,11 +68,11 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
   </div>
   <div class="card">
     <div class="card-label">♉ Tauro hoy</div>
-    <div class="sub" id="horoscopo" style="color:#c0b0e0;">Cargando...</div>
+    <div class="sub" id="horoscopo" style="color:#c0b0e0; margin-top:0;"><span class="loading">Cargando...</span></div>
   </div>
   <div class="card">
     <div class="card-label">💬 Frase del dia</div>
-    <div class="italic" id="frase">Cargando...</div>
+    <div class="italic" id="frase"><span class="loading">Cargando...</span></div>
     <div class="author" id="frase-autor"></div>
   </div>
 </div>
@@ -95,8 +94,8 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
     <div id="crypto"><div class="loading">Cargando...</div></div>
   </div>
   <div class="card">
-    <div class="card-label">💱 Tipo de cambio</div>
-    <div id="fx"><div class="loading">Cargando...</div></div>
+    <div class="card-label">🎬 Pelicula del dia</div>
+    <div id="movie"><div class="loading">Cargando...</div></div>
   </div>
 </div>
 
@@ -109,35 +108,30 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
     <a class="ig-btn" href="https://www.instagram.com/traficocpanama" target="_blank">Ver en Instagram en vivo →</a>
   </div>
   <div class="card">
-    <div class="card-label">🎬 Pelicula de la semana</div>
-    <div id="movie"><div class="loading">Cargando...</div></div>
-  </div>
-</div>
-
-<div class="grid-1">
-  <div class="card">
-    <div class="card-label">💼 Oportunidades laborales en Panama</div>
-    <div id="jobs"><div class="loading">Cargando...</div></div>
+    <div class="card-label">💼 Empleos en Panama</div>
+    <div id="jobs"></div>
   </div>
 </div>
 
 <div class="grid-1">
   <div class="card" style="text-align:center;">
     <div class="card-label">🧠 Dato curioso del dia</div>
-    <div class="italic" id="dato" style="margin-top:6px;">Cargando...</div>
+    <div class="italic" id="dato" style="margin-top:6px;"><span class="loading">Cargando...</span></div>
   </div>
 </div>
 
 <script>
+const NEWS_KEY = 'pub_86a7504a1f8a4ac7aeec026143ca84f3';
+const TMDB_KEY = '8ad8e063f18ad101bc4e1182deb40803';
+
 const panama = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Panama"}));
 const hora = panama.getHours();
 const dias = ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'];
 const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 document.getElementById('fecha').textContent = `${dias[panama.getDay()]}, ${panama.getDate()} de ${meses[panama.getMonth()]} de ${panama.getFullYear()}`;
-let saludo = hora >= 5 && hora < 12 ? 'Buenos dias' : hora >= 12 && hora < 19 ? 'Buenas tardes' : 'Buenas noches';
+const saludo = hora >= 5 && hora < 12 ? 'Buenos dias' : hora >= 12 && hora < 19 ? 'Buenas tardes' : 'Buenas noches';
 document.getElementById('saludo').textContent = `${saludo}, Isaac 👋`;
 
-// Clima
 async function loadClima() {
   try {
     const r = await fetch('https://wttr.in/Panama+City,Panama?format=j1');
@@ -154,7 +148,38 @@ async function loadClima() {
   }
 }
 
-// Crypto
+async function loadHoroscopo() {
+  try {
+    const r = await fetch('https://freehoroscopeapi.com/api/v1/get-horoscope/daily?sign=taurus');
+    const d = await r.json();
+    document.getElementById('horoscopo').textContent = d.data.horoscope;
+  } catch(e) {
+    document.getElementById('horoscopo').textContent = 'Venus favorece tus decisiones hoy. Confia en tu intuicion.';
+  }
+}
+
+async function loadFrase() {
+  try {
+    const r = await fetch('https://zenquotes.io/api/today');
+    const d = await r.json();
+    document.getElementById('frase').textContent = `"${d[0].q}"`;
+    document.getElementById('frase-autor').textContent = `— ${d[0].a}`;
+  } catch(e) {
+    document.getElementById('frase').textContent = '"La unica manera de hacer un gran trabajo es amar lo que haces."';
+    document.getElementById('frase-autor').textContent = '— Steve Jobs';
+  }
+}
+
+async function loadDato() {
+  try {
+    const r = await fetch('https://uselessfacts.jsph.pl/api/v1/facts/random?language=en');
+    const d = await r.json();
+    document.getElementById('dato').textContent = `"${d.text}"`;
+  } catch(e) {
+    document.getElementById('dato').textContent = '"El cerebro humano genera mas impulsos electricos en un dia que todos los telefonos del mundo combinados."';
+  }
+}
+
 async function loadCrypto() {
   try {
     const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24hr_change=true');
@@ -169,120 +194,70 @@ async function loadCrypto() {
   } catch(e) { document.getElementById('crypto').innerHTML = '<div class="loading">No disponible</div>'; }
 }
 
-// Tipo de cambio
-async function loadFX() {
-  try {
-    const r = await fetch('https://api.frankfurter.app/latest?from=USD&to=EUR,GBP,JPY,MXN,COP');
-    const d = await r.json();
-    const pairs = [{pair:'USD / EUR',key:'EUR'},{pair:'USD / GBP',key:'GBP'},{pair:'USD / JPY',key:'JPY'},{pair:'USD / MXN',key:'MXN'},{pair:'USD / COP',key:'COP'}];
-    document.getElementById('fx').innerHTML = pairs.map(p =>
-      `<div class="row"><span class="row-label">${p.pair}</span><span class="row-val">${d.rates[p.key].toFixed(2)}</span></div>`
-    ).join('');
-  } catch(e) { document.getElementById('fx').innerHTML = '<div class="loading">No disponible</div>'; }
-}
-
-// Noticias via RSS2JSON
 async function loadNews() {
   try {
-    const r = await fetch('https://api.rss2json.com/v1/api.json?rss_url=http://feeds.bbci.co.uk/news/world/rss.xml&count=4');
-    const d = await r.json();
-    if (d.items) {
-      document.getElementById('news-global').innerHTML = d.items.map(i =>
-        `<a class="news-link" href="${i.link}" target="_blank"><div class="news-item"><div class="news-title">${i.title}</div><div class="news-src">BBC World</div></div></a>`
+    const rg = await fetch(`https://newsdata.io/api/1/news?apikey=${NEWS_KEY}&language=en&category=top&size=4`);
+    const dg = await rg.json();
+    if (dg.results) {
+      document.getElementById('news-global').innerHTML = dg.results.map(i =>
+        `<a class="news-link" href="${i.link}" target="_blank"><div class="news-item"><div class="news-title">${i.title}</div><div class="news-src">${i.source_name || 'Global'}</div></div></a>`
       ).join('');
     }
-  } catch(e) {}
+  } catch(e) { document.getElementById('news-global').innerHTML = '<div class="loading">No disponible</div>'; }
   try {
-    const r = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.tvn-2.com/rss/&count=4');
-    const d = await r.json();
-    if (d.items) {
-      document.getElementById('news-panama').innerHTML = d.items.map(i =>
-        `<a class="news-link" href="${i.link}" target="_blank"><div class="news-item"><div class="news-title">${i.title}</div><div class="news-src">TVN Panama</div></div></a>`
+    const rp = await fetch(`https://newsdata.io/api/1/news?apikey=${NEWS_KEY}&country=pa&language=es&size=4`);
+    const dp = await rp.json();
+    if (dp.results) {
+      document.getElementById('news-panama').innerHTML = dp.results.map(i =>
+        `<a class="news-link" href="${i.link}" target="_blank"><div class="news-item"><div class="news-title">${i.title}</div><div class="news-src">${i.source_name || 'Panama'}</div></div></a>`
       ).join('');
     }
-  } catch(e) {}
+  } catch(e) { document.getElementById('news-panama').innerHTML = '<div class="loading">No disponible</div>'; }
 }
 
-// Frases motivacionales — rota diario
-const frases = [
-  {text: "El exito no es la llave de la felicidad. La felicidad es la llave del exito.", autor: "Albert Schweitzer"},
-  {text: "No cuentes los dias, haz que los dias cuenten.", autor: "Muhammad Ali"},
-  {text: "La unica manera de hacer un gran trabajo es amar lo que haces.", autor: "Steve Jobs"},
-  {text: "El futuro pertenece a quienes creen en la belleza de sus suenos.", autor: "Eleanor Roosevelt"},
-  {text: "No es la montana la que conquistamos, sino a nosotros mismos.", autor: "Edmund Hillary"},
-  {text: "La disciplina es el puente entre metas y logros.", autor: "Jim Rohn"},
-  {text: "Cada experto fue una vez un principiante.", autor: "Helen Hayes"},
-];
-const diaIndex = panama.getDay();
-const frase = frases[diaIndex % frases.length];
-document.getElementById('frase').textContent = `"${frase.text}"`;
-document.getElementById('frase-autor').textContent = `— ${frase.autor}`;
+async function loadMovie() {
+  try {
+    const today = panama.toISOString().split('T')[0];
+    const r = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${TMDB_KEY}&language=es`);
+    const d = await r.json();
+    const diaAnio = Math.floor((panama - new Date(panama.getFullYear(), 0, 0)) / 86400000);
+    const movie = d.results[diaAnio % d.results.length];
+    const poster = movie.poster_path ? `https://image.tmdb.org/t/p/w200${movie.poster_path}` : null;
+    document.getElementById('movie').innerHTML = `
+      <div class="movie-row">
+        <div class="movie-poster">${poster ? `<img src="${poster}" alt="poster">` : '🎬'}</div>
+        <div style="flex:1">
+          <div style="font-size:15px;font-weight:500;margin-bottom:6px;">${movie.title}</div>
+          <div style="display:flex;gap:6px;margin-bottom:8px;">
+            <span class="pill amber">⭐ ${movie.vote_average.toFixed(1)}</span>
+            <span class="pill blue">${movie.release_date?.slice(0,4) || ''}</span>
+          </div>
+          <div class="sub">${movie.overview?.slice(0, 120) || ''}...</div>
+        </div>
+      </div>`;
+  } catch(e) {
+    document.getElementById('movie').innerHTML = '<div class="loading">No disponible</div>';
+  }
+}
 
-// Horoscopo Tauro — rota diario
-const horoscopos = [
-  "Venus favorece decisiones economicas hoy. Tu intuicion esta afilada — confia en ella.",
-  "Excelente dia para conectar con personas nuevas. Tu energia magnetica atrae oportunidades.",
-  "Enfocate en tus metas a largo plazo. Un pequeno paso hoy genera grandes resultados manana.",
-  "Tu perseverancia es tu mayor fortaleza. No te rindas en lo que empezaste esta semana.",
-  "Momento ideal para revisar tus finanzas. Una decision inteligente hoy puede cambiar tu mes.",
-  "La creatividad fluye con fuerza. Aprovecha para plasmar esas ideas que llevas tiempo pensando.",
-  "Dia de reflexion y recarga. Cuida tu energia y dedica tiempo a lo que te hace feliz.",
-];
-document.getElementById('horoscopo').textContent = horoscopos[diaIndex % horoscopos.length];
-
-// Datos curiosos — rota diario
-const datos = [
-  "El cerebro humano genera mas impulsos electricos en un dia que todos los telefonos del mundo combinados.",
-  "Los pulpos tienen tres corazones y sangre azul. Dos corazones bombean sangre a las branquias y uno al resto del cuerpo.",
-  "Una cucharada de una estrella de neutrones pesaria aproximadamente 1,000 millones de toneladas.",
-  "El ADN humano, si se estirara, mederia aproximadamente 2 metros. En todas las celulas de tu cuerpo, seria equivalente a ir y volver al Sol 300 veces.",
-  "Los elefantes son los unicos animales ademas de los humanos que realizan rituales funerarios por sus muertos.",
-  "El 40% de las personas pierde el 15% de su masa muscular entre los 20 y 70 anos si no hace ejercicio regularmente.",
-  "Hay mas combinaciones posibles en una baraja de cartas que atomos en la Tierra.",
-];
-document.getElementById('dato').textContent = `"${datos[panama.getDate() % datos.length]}"`;
-
-// Pelicula de la semana — rota semanal
-const peliculas = [
-  {titulo: "Dune: Part Two", genero: "Sci-Fi", año: "2024", desc: "Una epica visual imprescindible. Villeneuve lleva la saga al siguiente nivel."},
-  {titulo: "Oppenheimer", genero: "Drama", año: "2023", desc: "La historia del hombre mas peligroso del mundo. Nolan en su mejor momento."},
-  {titulo: "The Brutalist", genero: "Drama", año: "2024", desc: "Una obra maestra sobre ambicion, arte y el sueno americano. 3.5 horas que vuelan."},
-  {titulo: "Anora", genero: "Romance", año: "2024", desc: "Ganadora de Cannes. Una historia cruda y hermosa sobre amor y clase social."},
-];
-const semana = Math.floor(panama.getDate() / 7);
-const peli = peliculas[semana % peliculas.length];
-document.getElementById('movie').innerHTML = `
-  <div class="movie-row">
-    <div class="movie-poster">🎬</div>
-    <div>
-      <div style="font-size:15px;font-weight:500;margin-bottom:6px;">${peli.titulo}</div>
-      <div style="display:flex;gap:6px;margin-bottom:8px;"><span class="pill amber">${peli.genero}</span><span class="pill blue">${peli.año}</span></div>
-      <div class="sub">${peli.desc}</div>
-    </div>
-  </div>`;
-
-// Empleos cliqueables via LinkedIn/Indeed
 const empleos = [
-  {titulo: "Analista de Datos", empresa: "Banco General", url: "https://www.linkedin.com/jobs/search/?keywords=analista+datos&location=Panama"},
-  {titulo: "Desarrollador Python", empresa: "Remoto — Panama", url: "https://www.linkedin.com/jobs/search/?keywords=python+developer&location=Panama"},
-  {titulo: "Gerente de Proyectos TI", empresa: "Panama City", url: "https://www.linkedin.com/jobs/search/?keywords=project+manager+IT&location=Panama"},
-  {titulo: "Marketing Digital", empresa: "Panama City", url: "https://www.linkedin.com/jobs/search/?keywords=marketing+digital&location=Panama"},
-  {titulo: "Data Science", empresa: "Remoto", url: "https://www.linkedin.com/jobs/search/?keywords=data+science&location=Panama"},
-  {titulo: "UX Designer", empresa: "Panama City", url: "https://www.linkedin.com/jobs/search/?keywords=UX+designer&location=Panama"},
+  {titulo:"Analista de Datos", empresa:"Panama City", url:"https://www.linkedin.com/jobs/search/?keywords=analista+datos&location=Panama"},
+  {titulo:"Desarrollador Python", empresa:"Remoto", url:"https://www.linkedin.com/jobs/search/?keywords=python+developer&location=Panama"},
+  {titulo:"Gerente de Proyectos TI", empresa:"Panama City", url:"https://www.linkedin.com/jobs/search/?keywords=project+manager+IT&location=Panama"},
+  {titulo:"Marketing Digital", empresa:"Panama City", url:"https://www.linkedin.com/jobs/search/?keywords=marketing+digital&location=Panama"},
+  {titulo:"Data Science", empresa:"Remoto", url:"https://www.linkedin.com/jobs/search/?keywords=data+science&location=Panama"},
+  {titulo:"UX Designer", empresa:"Panama City", url:"https://www.linkedin.com/jobs/search/?keywords=UX+designer&location=Panama"},
 ];
 document.getElementById('jobs').innerHTML = `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0 24px;">` +
-  empleos.map(j => `
-    <a class="job-link" href="${j.url}" target="_blank">
-      <div class="job-item">
-        <div class="job-title">${j.titulo} ↗</div>
-        <div class="job-co">${j.empresa}</div>
-      </div>
-    </a>`).join('') + `</div>`;
+  empleos.map(j => `<a class="job-link" href="${j.url}" target="_blank"><div class="job-item"><div class="job-title">${j.titulo} ↗</div><div class="job-co">${j.empresa}</div></div></a>`).join('') + `</div>`;
 
 loadClima();
+loadHoroscopo();
+loadFrase();
+loadDato();
 loadCrypto();
-loadFX();
 loadNews();
+loadMovie();
 </script>
 </body>
 </html>
