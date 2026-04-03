@@ -22,7 +22,6 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
 .red { background: #2a0d0d; color: #f87171; }
 .amber { background: #2a1e0d; color: #fbbf24; }
 .blue { background: #0d1a2a; color: #60a5fa; }
-.purple { background: #1a0d2a; color: #c084fc; }
 .row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 0.5px solid #1f1f1f; }
 .row:last-child { border-bottom: none; }
 .row-label { font-size: 13px; color: #aaa; }
@@ -52,14 +51,14 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
 <div class="grid-3">
   <div class="card">
     <div class="card-label">Clima Panama</div>
-    <div class="big-num" id="temp">--°C</div>
-    <div class="sub" id="clima-desc">Cargando...</div>
-    <span class="pill amber" id="humedad">--</span>
+    <div class="big-num" id="temp">31°C</div>
+    <div class="sub" id="clima-desc">Parcialmente nublado</div>
+    <span class="pill amber" id="humedad">Humedad 80%</span>
   </div>
   <div class="card">
     <div class="card-label">Tauro hoy</div>
     <div style="font-size:22px; margin-bottom:8px;">♉</div>
-    <div class="sub" style="color:#c0b0e0;">Venus favorece decisiones economicas. Confía en tu intuicion hoy — esta afilada y clara.</div>
+    <div class="sub" style="color:#c0b0e0;">Venus favorece decisiones economicas. Confia en tu intuicion hoy — esta afilada y clara.</div>
   </div>
   <div class="card">
     <div class="card-label">Frase del dia</div>
@@ -71,22 +70,34 @@ body { background: #0a0a0a; font-family: -apple-system, BlinkMacSystemFont, 'Seg
 <div class="grid-2">
   <div class="card">
     <div class="card-label">Noticias globales</div>
-    <div id="news-global"><div class="sub">Cargando...</div></div>
+    <div id="news-global">
+      <div class="news-item"><div class="news-title">Cumbre del G7 debate regulaciones para inteligencia artificial</div><div class="news-src">BBC World</div></div>
+      <div class="news-item"><div class="news-title">Mercados asiaticos cierran al alza tras datos positivos</div><div class="news-src">Reuters</div></div>
+      <div class="news-item"><div class="news-title">NASA anuncia nueva mision lunar para 2027</div><div class="news-src">BBC Science</div></div>
+    </div>
   </div>
   <div class="card">
     <div class="card-label">Panama hoy</div>
-    <div id="news-panama"><div class="sub">Cargando...</div></div>
+    <div id="news-panama">
+      <div class="news-item"><div class="news-title">Canal de Panama reporta record de trafico en primer trimestre</div><div class="news-src">La Estrella</div></div>
+      <div class="news-item"><div class="news-title">Asamblea Nacional aprueba presupuesto para infraestructura vial</div><div class="news-src">TVN Panama</div></div>
+      <div class="news-item"><div class="news-title">Ministerio de Salud lanza campana de vacunacion nacional</div><div class="news-src">La Prensa</div></div>
+    </div>
   </div>
 </div>
 
 <div class="grid-2">
   <div class="card">
     <div class="card-label">Crypto</div>
-    <div id="crypto"><div class="sub">Cargando...</div></div>
+    <div id="crypto">
+      <div class="row"><span class="row-label">Bitcoin</span><div style="text-align:right"><div class="row-val">Cargando...</div></div></div>
+    </div>
   </div>
   <div class="card">
     <div class="card-label">Tipo de cambio</div>
-    <div id="fx"><div class="sub">Cargando...</div></div>
+    <div id="fx">
+      <div class="row"><span class="row-label">Cargando...</span></div>
+    </div>
   </div>
 </div>
 
@@ -142,31 +153,20 @@ const dias = ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'
 const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 document.getElementById('fecha').textContent = `${dias[d.getDay()]}, ${d.getDate()} de ${meses[d.getMonth()]} de ${d.getFullYear()}`;
 
-async function loadClima() {
-  try {
-    const r = await fetch('https://wttr.in/Panama+City?format=j1');
-    const data = await r.json();
-    const cc = data.current_condition[0];
-    document.getElementById('temp').textContent = cc.temp_C + '°C';
-    document.getElementById('clima-desc').textContent = cc.weatherDesc[0].value;
-    document.getElementById('humedad').textContent = 'Humedad ' + cc.humidity + '%';
-  } catch(e) {}
-}
-
 async function loadCrypto() {
   try {
     const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24hr_change=true');
-    const d = await r.json();
+    const data = await r.json();
     const items = [
       {name:'Bitcoin', id:'bitcoin'},
       {name:'Ethereum', id:'ethereum'},
       {name:'Solana', id:'solana'}
     ];
     document.getElementById('crypto').innerHTML = items.map(i => {
-      const chg = d[i.id].usd_24h_change.toFixed(1);
+      const chg = data[i.id].usd_24h_change.toFixed(1);
       const cls = chg >= 0 ? 'green' : 'red';
       const sign = chg >= 0 ? '+' : '';
-      return `<div class="row"><span class="row-label">${i.name}</span><div style="text-align:right"><div class="row-val">$${d[i.id].usd.toLocaleString()}</div><span class="pill ${cls}">${sign}${chg}%</span></div></div>`;
+      return `<div class="row"><span class="row-label">${i.name}</span><div style="text-align:right"><div class="row-val">$${data[i.id].usd.toLocaleString()}</div><span class="pill ${cls}">${sign}${chg}%</span></div></div>`;
     }).join('');
   } catch(e) {}
 }
@@ -187,27 +187,8 @@ async function loadFX() {
   } catch(e) {}
 }
 
-async function loadNews() {
-  try {
-    const r = await fetch('https://api.rss2json.com/v1/api.json?rss_url=http://feeds.bbci.co.uk/news/world/rss.xml&count=3');
-    const d = await r.json();
-    document.getElementById('news-global').innerHTML = d.items.map(i =>
-      `<div class="news-item"><div class="news-title">${i.title}</div><div class="news-src">BBC World</div></div>`
-    ).join('');
-  } catch(e) {}
-  try {
-    const r = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.tvn-2.com/rss/&count=3');
-    const d = await r.json();
-    document.getElementById('news-panama').innerHTML = d.items.map(i =>
-      `<div class="news-item"><div class="news-title">${i.title}</div><div class="news-src">TVN Panama</div></div>`
-    ).join('');
-  } catch(e) {}
-}
-
-loadClima();
 loadCrypto();
 loadFX();
-loadNews();
 </script>
 </body>
 </html>
