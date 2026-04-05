@@ -2,271 +2,728 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard — Isaac</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Isaac">
+<title>Isaac — Dashboard</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg: #0a0a0a; --bg-card: #161616; --border: #2a2a2a; --text: #ffffff;
-  --text-sub: #666666; --text-muted: #444444; --text-news: #dddddd; --row-border: #1f1f1f;
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#000;--c1:#111;--c2:#1c1c1e;--c3:#2c2c2e;--c4:#3a3a3c;
+  --t1:#fff;--t2:#ebebf599;--t3:#ebebf54d;--t4:#ffffff1a;
+  --gr:#30d158;--bl:#0a84ff;--rd:#ff453a;--gd:#ffd60a;--pr:#bf5af2;--tl:#5ac8fa;--or:#ff9f0a;
+  --safe-top:env(safe-area-inset-top);--safe-bot:env(safe-area-inset-bottom);
 }
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg: #f5f5f5; --bg-card: #ffffff; --border: #e0e0e0; --text: #0a0a0a;
-    --text-sub: #888888; --text-muted: #aaaaaa; --text-news: #222222; --row-border: #eeeeee;
-  }
-}
-body { background: var(--bg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text); padding: 20px; transition: background 0.3s; }
-.header { margin-bottom: 24px; }
-.greeting { font-size: 26px; font-weight: 600; }
-.date { font-size: 13px; color: var(--text-sub); margin-top: 4px; }
-.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px; }
-.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
-.grid-1 { margin-bottom: 12px; }
-.card { background: var(--bg-card); border-radius: 16px; padding: 18px; border: 0.5px solid var(--border); }
-.card-label { font-size: 12px; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; font-weight: 500; }
-.big-num { font-size: 32px; font-weight: 600; }
-.sub { font-size: 13px; color: var(--text-sub); margin-top: 4px; line-height: 1.5; }
-.pill { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 500; margin-top: 8px; }
-.green { background: #0d2a1a; color: #3ecf8e; }
-.red { background: #2a0d0d; color: #f87171; }
-.amber { background: #2a1e0d; color: #fbbf24; }
-.blue { background: #0d1a2a; color: #60a5fa; }
-.row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 0.5px solid var(--row-border); }
-.row:last-child { border-bottom: none; }
-.row-label { font-size: 13px; color: var(--text-sub); }
-.row-val { font-size: 14px; font-weight: 500; }
-.news-item { padding: 9px 0; border-bottom: 0.5px solid var(--row-border); }
-.news-item:last-child { border-bottom: none; }
-.news-title { font-size: 13px; color: var(--text-news); line-height: 1.4; }
-.news-src { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
-.news-link { text-decoration: none; color: inherit; display: block; }
-.news-link:hover .news-title { color: #60a5fa; }
-.traffic-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.italic { font-style: italic; color: var(--text-sub); font-size: 14px; line-height: 1.6; }
-.author { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
-.job-item { padding: 9px 0; border-bottom: 0.5px solid var(--row-border); }
-.job-item:last-child { border-bottom: none; }
-.job-link { text-decoration: none; color: inherit; display: block; }
-.job-link:hover .job-title { color: #60a5fa; }
-.job-title { font-size: 13px; color: var(--text-news); font-weight: 500; }
-.job-co { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-.ig-btn { display: inline-block; margin-top: 12px; padding: 8px 16px; background: #1a1a2e; color: #a78bfa; border-radius: 99px; font-size: 12px; text-decoration: none; border: 0.5px solid #2a2a4a; }
-.loading { color: var(--text-muted); font-size: 13px; font-style: italic; }
-.movie-row { display: flex; gap: 14px; align-items: flex-start; }
-.movie-poster { width: 60px; height: 90px; background: var(--border); border-radius: 8px; flex-shrink: 0; overflow: hidden; }
-.movie-poster img { width: 100%; height: 100%; object-fit: cover; }
-@media(max-width: 600px) {
-  .grid-3 { grid-template-columns: 1fr; }
-  .grid-2 { grid-template-columns: 1fr; }
-}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--t1);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',sans-serif;padding:0;overflow-x:hidden;padding-bottom:calc(80px + var(--safe-bot))}
+
+/* Nav tabs */
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(0,0,0,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:0.5px solid rgba(255,255,255,.1);padding:8px 0 calc(8px + var(--safe-bot));display:flex;justify-content:space-around}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 16px;border:none;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.nav-btn .ico{font-size:22px;transition:transform .15s}
+.nav-btn .lbl{font-size:10px;font-weight:500;color:var(--t3);letter-spacing:.03em}
+.nav-btn.active .ico{transform:scale(1.1)}
+.nav-btn.active .lbl{color:var(--bl)}
+
+/* Pages */
+.page{display:none;padding:0 14px;padding-top:calc(var(--safe-top) + 60px)}
+.page.active{display:block}
+
+/* Header */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:99;background:rgba(0,0,0,.8);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:0.5px solid rgba(255,255,255,.06);padding:calc(var(--safe-top) + 10px) 16px 10px;display:flex;align-items:center;justify-content:space-between}
+.topbar-left h1{font-size:17px;font-weight:700;letter-spacing:-.3px}
+.topbar-left p{font-size:11px;color:var(--t3);margin-top:1px}
+.topbar-right{text-align:right}
+.live-clock{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+.live-date{font-size:10px;color:var(--t3);margin-top:1px}
+
+/* Cards */
+.card{background:var(--c1);border-radius:18px;padding:16px;border:0.5px solid rgba(255,255,255,.07);margin-bottom:10px;overflow:hidden;position:relative}
+.card-sm{padding:14px}
+.lbl{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--t3);margin-bottom:10px}
+.bignum{font-size:36px;font-weight:700;letter-spacing:-.6px;line-height:1}
+.sub{font-size:13px;color:var(--t2);margin-top:5px;line-height:1.5}
+
+/* Pills */
+.pill{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:100px;font-size:11px;font-weight:600;margin-top:6px}
+.pg{background:rgba(48,209,88,.15);color:var(--gr)}
+.pr{background:rgba(255,69,58,.15);color:var(--rd)}
+.pa{background:rgba(255,214,10,.15);color:var(--gd)}
+.pb{background:rgba(10,132,255,.15);color:var(--bl)}
+.pp{background:rgba(191,90,242,.15);color:var(--pr)}
+
+/* Rows */
+.row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:.5px solid rgba(255,255,255,.06)}
+.row:last-child{border-bottom:none}
+.rl{font-size:13px;color:var(--t2)}
+.rv{font-size:14px;font-weight:500;font-variant-numeric:tabular-nums}
+
+/* Grid */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+
+/* Weather */
+.wx-big{display:flex;align-items:flex-end;gap:12px;margin-bottom:12px}
+.wx-icon{font-size:48px;line-height:1}
+.wx-info{}
+.wx-temp{font-size:42px;font-weight:300;letter-spacing:-1px}
+.wx-desc{font-size:14px;color:var(--t2);margin-top:2px}
+.wx-detail{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.wx-cell{background:var(--t4);border-radius:12px;padding:10px;text-align:center}
+.wx-cv{font-size:16px;font-weight:600}
+.wx-cl{font-size:10px;color:var(--t3);margin-top:2px}
+
+/* Streak */
+.streak-num{font-size:48px;font-weight:700;letter-spacing:-1px;color:var(--or)}
+.streak-fire{font-size:32px}
+.streak-bar{display:flex;gap:4px;margin-top:12px}
+.streak-day{flex:1;height:4px;border-radius:2px;background:var(--t4)}
+.streak-day.done{background:var(--or)}
+.streak-day.today{background:var(--gr)}
+
+/* Quiz */
+.quiz-q{font-size:16px;font-weight:500;line-height:1.5;margin-bottom:16px;color:var(--t1)}
+.quiz-opts{display:flex;flex-direction:column;gap:8px}
+.quiz-opt{background:var(--c2);border:1.5px solid var(--c3);border-radius:12px;padding:12px 14px;font-size:14px;color:var(--t1);cursor:pointer;transition:all .2s;text-align:left;-webkit-tap-highlight-color:transparent}
+.quiz-opt:active{transform:scale(.98)}
+.quiz-opt.correct{border-color:var(--gr);background:rgba(48,209,88,.1);color:var(--gr)}
+.quiz-opt.wrong{border-color:var(--rd);background:rgba(255,69,58,.1);color:var(--rd)}
+.quiz-result{font-size:13px;color:var(--t2);margin-top:12px;line-height:1.6;display:none}
+
+/* History */
+.hist-date{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bl);margin-bottom:8px}
+.hist-event{font-size:14px;color:var(--t1);line-height:1.5;padding:10px 0;border-bottom:.5px solid rgba(255,255,255,.06)}
+.hist-event:last-child{border-bottom:none}
+.hist-year{font-size:12px;font-weight:700;color:var(--gd);margin-right:8px}
+
+/* Word */
+.word-main{font-size:28px;font-weight:700;letter-spacing:-.3px;margin-bottom:4px}
+.word-pron{font-size:13px;color:var(--bl);font-style:italic;margin-bottom:8px}
+.word-type{font-size:11px;font-weight:600;color:var(--pr);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.word-def{font-size:14px;color:var(--t2);line-height:1.6;margin-bottom:8px}
+.word-ex{font-size:13px;color:var(--t3);font-style:italic;line-height:1.5}
+
+/* NASA */
+.nasa-img{width:100%;border-radius:14px;aspect-ratio:16/9;object-fit:cover;margin-bottom:12px;background:var(--c2)}
+.nasa-title{font-size:15px;font-weight:600;margin-bottom:6px}
+.nasa-desc{font-size:13px;color:var(--t2);line-height:1.6}
+
+/* Crypto */
+.cr{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:.5px solid rgba(255,255,255,.06)}
+.cr:last-child{border-bottom:none}
+.cr-l{display:flex;align-items:center;gap:10px}
+.cr-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.cr-name{font-size:14px;font-weight:500}
+.cr-sym{font-size:11px;color:var(--t3)}
+.cr-p{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.cr-ch{font-size:11px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:2px}
+
+/* Countdown */
+.cd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.cd-cell{background:var(--c2);border-radius:12px;padding:10px;text-align:center}
+.cd-num{font-size:22px;font-weight:700;letter-spacing:-.3px;font-variant-numeric:tabular-nums}
+.cd-lbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-top:2px}
+
+/* Finance tip */
+.tip-num{display:inline-block;width:28px;height:28px;border-radius:8px;background:rgba(10,132,255,.15);color:var(--bl);font-size:12px;font-weight:700;text-align:center;line-height:28px;margin-bottom:10px}
+.tip-title{font-size:16px;font-weight:600;margin-bottom:8px}
+.tip-body{font-size:14px;color:var(--t2);line-height:1.65}
+
+/* News */
+.ni{padding:11px 0;border-bottom:.5px solid rgba(255,255,255,.06)}
+.ni:last-child{border-bottom:none}
+.na{text-decoration:none;color:inherit;display:block}
+.nt{font-size:13px;color:var(--t1);line-height:1.45;font-weight:400}
+.ns{font-size:11px;color:var(--t3);margin-top:3px}
+
+/* Movie */
+.mv{display:flex;gap:14px}
+.mp{width:72px;height:108px;border-radius:12px;background:var(--c2);flex-shrink:0;overflow:hidden}
+.mp img{width:100%;height:100%;object-fit:cover}
+.mt{font-size:15px;font-weight:600;margin-bottom:6px}
+.md{font-size:12px;color:var(--t3);line-height:1.5}
+
+/* AQI */
+.aqi-bar{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--gr),var(--gd),var(--or),var(--rd));margin:10px 0 5px;position:relative}
+.aqi-n{position:absolute;top:-4px;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--bg);transform:translateX(-50%);box-shadow:0 0 6px rgba(0,0,0,.5);transition:left .6s}
+
+/* Forex */
+.fx-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.fx-item{background:var(--t4);border-radius:12px;padding:10px 12px}
+.fx-pair{font-size:10px;font-weight:600;letter-spacing:.06em;color:var(--t3);text-transform:uppercase}
+.fx-val{font-size:18px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+
+/* Section title */
+.sec-title{font-size:20px;font-weight:700;letter-spacing:-.3px;margin:20px 0 12px}
+
+/* Loading */
+.ld{color:var(--t3);font-size:12px;font-style:italic}
+
+/* Fact */
+.fact-txt{font-size:15px;color:var(--t1);line-height:1.7;font-style:italic}
+
+/* Tap feedback */
+.tappable{cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity .15s}
+.tappable:active{opacity:.7}
+
+/* Scroll indicator */
+::-webkit-scrollbar{display:none}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="greeting" id="saludo">Hola, Isaac</div>
-  <div class="date" id="fecha"></div>
-</div>
-
-<div class="grid-3">
-  <div class="card">
-    <div class="card-label">🌤️ Clima Panama</div>
-    <div class="big-num" id="temp"><span class="loading">Cargando...</span></div>
-    <div class="sub" id="clima-desc"></div>
-    <span class="pill amber" id="humedad" style="display:none"></span>
+<!-- Top bar -->
+<div class="topbar">
+  <div class="topbar-left">
+    <h1 id="greeting">Hola, Isaac 👋</h1>
+    <p id="dateStr">cargando...</p>
   </div>
-  <div class="card">
-    <div class="card-label">♉ Tauro hoy</div>
-    <div class="sub" id="horoscopo" style="color:#c0b0e0; margin-top:0;"><span class="loading">Cargando...</span></div>
-  </div>
-  <div class="card">
-    <div class="card-label">💬 Frase del dia</div>
-    <div class="italic" id="frase"><span class="loading">Cargando...</span></div>
-    <div class="author" id="frase-autor"></div>
+  <div class="topbar-right">
+    <div class="live-clock" id="clock">--:--</div>
+    <div class="live-date">Panamá 🇵🇦</div>
   </div>
 </div>
 
-<div class="grid-2">
+<!-- ===================== PAGE: HOME ===================== -->
+<div class="page active" id="page-home">
+
+  <!-- Streak -->
   <div class="card">
-    <div class="card-label">🌍 Noticias globales</div>
-    <div id="news-global"><div class="loading">Cargando...</div></div>
+    <div class="lbl">🔥 Tu racha diaria</div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <div>
+        <div class="streak-fire" id="streakFire">🔥</div>
+        <div class="streak-num" id="streakNum">1</div>
+        <div class="sub" id="streakMsg">Día 1 — ¡Bienvenido!</div>
+      </div>
+      <div style="flex:1">
+        <div class="streak-bar" id="streakBar"></div>
+        <div style="font-size:11px;color:var(--t3);margin-top:8px" id="streakSub">Sigue visitando cada día para mantener tu racha</div>
+      </div>
+    </div>
   </div>
+
+  <!-- Countdown -->
   <div class="card">
-    <div class="card-label">🇵🇦 Panama hoy</div>
-    <div id="news-panama"><div class="loading">Cargando...</div></div>
+    <div class="lbl">⏳ Próximos eventos</div>
+    <div style="font-size:13px;color:var(--t2);margin-bottom:10px" id="nextEvent">Cargando...</div>
+    <div class="cd-grid" id="countdown">
+      <div class="cd-cell"><div class="cd-num" id="cd-d">--</div><div class="cd-lbl">Días</div></div>
+      <div class="cd-cell"><div class="cd-num" id="cd-h">--</div><div class="cd-lbl">Horas</div></div>
+      <div class="cd-cell"><div class="cd-num" id="cd-m">--</div><div class="cd-lbl">Min</div></div>
+      <div class="cd-cell"><div class="cd-num" id="cd-s">--</div><div class="cd-lbl">Seg</div></div>
+    </div>
   </div>
+
+  <!-- Clima -->
+  <div class="card">
+    <div class="lbl">🌤️ Clima — Panamá City</div>
+    <div class="wx-big">
+      <div class="wx-icon" id="wxIcon">⏳</div>
+      <div class="wx-info">
+        <div class="wx-temp" id="wxTemp">--°</div>
+        <div class="wx-desc" id="wxDesc">cargando...</div>
+        <div style="font-size:12px;color:var(--t3)" id="wxFeels"></div>
+      </div>
+    </div>
+    <div class="wx-detail" id="wxDetail"></div>
+  </div>
+
+  <!-- Foto NASA -->
+  <div class="card">
+    <div class="lbl">🔭 Imagen del cosmos — NASA APOD</div>
+    <img id="nasaImg" class="nasa-img" alt="NASA APOD" style="display:none">
+    <div class="nasa-title" id="nasaTitle"><span class="ld">Cargando imagen del universo...</span></div>
+    <div class="nasa-desc" id="nasaDesc"></div>
+  </div>
+
+  <!-- Noticias Panama -->
+  <div class="card">
+    <div class="lbl">🇵🇦 Panamá hoy</div>
+    <div id="newsPanama"><div class="ld">Cargando...</div></div>
+  </div>
+
 </div>
 
-<div class="grid-2">
+<!-- ===================== PAGE: LEARN ===================== -->
+<div class="page" id="page-learn">
+
+  <!-- Quiz diario -->
   <div class="card">
-    <div class="card-label">₿ Crypto</div>
-    <div id="crypto"><div class="loading">Cargando...</div></div>
+    <div class="lbl">🧩 Quiz del día — finanzas & cultura</div>
+    <div id="quizContainer"><div class="ld">Cargando pregunta...</div></div>
+    <div style="font-size:12px;color:var(--t3);margin-top:10px" id="quizScore"></div>
   </div>
+
+  <!-- Palabra en inglés -->
   <div class="card">
-    <div class="card-label">🎬 Pelicula del dia</div>
-    <div id="movie"><div class="loading">Cargando...</div></div>
+    <div class="lbl">🔤 Palabra del día — inglés</div>
+    <div id="wordCard"><div class="ld">Cargando...</div></div>
   </div>
+
+  <!-- Historia hoy -->
+  <div class="card">
+    <div class="lbl">📜 Hoy en la historia</div>
+    <div id="histToday"><div class="ld">Cargando...</div></div>
+  </div>
+
+  <!-- Tip finanzas -->
+  <div class="card">
+    <div class="lbl">💡 Concepto financiero del día</div>
+    <div id="finTip"><div class="ld">Cargando...</div></div>
+  </div>
+
+  <!-- Dato curioso -->
+  <div class="card">
+    <div class="lbl">🧠 Dato curioso</div>
+    <div class="fact-txt" id="factTxt"><span class="ld">Cargando...</span></div>
+  </div>
+
 </div>
 
-<div class="grid-2">
+<!-- ===================== PAGE: MARKETS ===================== -->
+<div class="page" id="page-markets">
+
+  <!-- Crypto -->
   <div class="card">
-    <div class="card-label">🚦 Trafico Panama</div>
-    <div class="row"><div style="display:flex;align-items:center;gap:10px;"><div class="traffic-dot" style="background:#f87171"></div><span class="row-label">Corredor Sur — congestion alta</span></div></div>
-    <div class="row"><div style="display:flex;align-items:center;gap:10px;"><div class="traffic-dot" style="background:#fbbf24"></div><span class="row-label">Via Espana — trafico moderado</span></div></div>
-    <div class="row"><div style="display:flex;align-items:center;gap:10px;"><div class="traffic-dot" style="background:#3ecf8e"></div><span class="row-label">Transistmica — flujo normal</span></div></div>
-    <a class="ig-btn" href="https://www.instagram.com/traficocpanama" target="_blank">Ver en Instagram en vivo →</a>
+    <div class="lbl">₿ Crypto — Actualización en vivo</div>
+    <div id="cryptoList"><div class="ld">Cargando...</div></div>
   </div>
+
+  <!-- Forex -->
   <div class="card">
-    <div class="card-label">💼 Empleos en Panama</div>
-    <div id="jobs"></div>
+    <div class="lbl">💱 Tipos de cambio</div>
+    <div class="fx-grid" id="forexData"><div class="ld">Cargando...</div></div>
   </div>
+
+  <!-- Air Quality -->
+  <div class="card">
+    <div class="lbl">💨 Calidad del aire — Panamá</div>
+    <div style="display:flex;align-items:baseline;gap:8px">
+      <div class="bignum" id="aqiVal">--</div>
+      <div class="sub" id="aqiLbl" style="margin-top:0">AQI</div>
+    </div>
+    <div class="aqi-bar"><div class="aqi-n" id="aqiN" style="left:10%"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3)"><span>Bueno</span><span>Moderado</span><span>Malo</span></div>
+    <div style="font-size:12px;color:var(--t2);margin-top:8px" id="aqiTip"></div>
+  </div>
+
+  <!-- Noticias globales -->
+  <div class="card">
+    <div class="lbl">🌍 Noticias globales</div>
+    <div id="newsGlobal"><div class="ld">Cargando...</div></div>
+  </div>
+
 </div>
 
-<div class="grid-1">
-  <div class="card" style="text-align:center;">
-    <div class="card-label">🧠 Dato curioso del dia</div>
-    <div class="italic" id="dato" style="margin-top:6px;"><span class="loading">Cargando...</span></div>
+<!-- ===================== PAGE: ENTERTAINMENT ===================== -->
+<div class="page" id="page-fun">
+
+  <!-- Horoscopo Tauro -->
+  <div class="card">
+    <div class="lbl">♉ Tauro — hoy</div>
+    <div id="horoCard"><div class="ld">Cargando...</div></div>
   </div>
+
+  <!-- Movie -->
+  <div class="card">
+    <div class="lbl">🎬 Película del día</div>
+    <div id="movieCard"><div class="ld">Cargando...</div></div>
+  </div>
+
+  <!-- Frase -->
+  <div class="card">
+    <div class="lbl">💬 Frase motivacional</div>
+    <div style="font-size:16px;font-style:italic;line-height:1.65;color:var(--t1)" id="fraseText"><span class="ld">Cargando...</span></div>
+    <div style="font-size:12px;color:var(--t3);margin-top:10px" id="fraseAutor"></div>
+  </div>
+
 </div>
+
+<!-- Bottom nav -->
+<nav class="nav">
+  <button class="nav-btn active" onclick="switchPage('home',this)">
+    <span class="ico">🏠</span><span class="lbl">Inicio</span>
+  </button>
+  <button class="nav-btn" onclick="switchPage('learn',this)">
+    <span class="ico">📚</span><span class="lbl">Aprender</span>
+  </button>
+  <button class="nav-btn" onclick="switchPage('markets',this)">
+    <span class="ico">📈</span><span class="lbl">Mercados</span>
+  </button>
+  <button class="nav-btn" onclick="switchPage('fun',this)">
+    <span class="ico">✨</span><span class="lbl">Más</span>
+  </button>
+</nav>
 
 <script>
-const NEWS_KEY = 'pub_86a7504a1f8a4ac7aeec026143ca84f3';
-const TMDB_KEY = '8ad8e063f18ad101bc4e1182deb40803';
+const NEWS_KEY='pub_86a7504a1f8a4ac7aeec026143ca84f3';
+const TMDB_KEY='8ad8e063f18ad101bc4e1182deb40803';
+const NASA_KEY='DEMO_KEY';
 
-const panama = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Panama"}));
-const hora = panama.getHours();
-const dias = ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'];
-const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-document.getElementById('fecha').textContent = `${dias[panama.getDay()]}, ${panama.getDate()} de ${meses[panama.getMonth()]} de ${panama.getFullYear()}`;
-const saludo = hora >= 5 && hora < 12 ? 'Buenos dias' : hora >= 12 && hora < 19 ? 'Buenas tardes' : 'Buenas noches';
-document.getElementById('saludo').textContent = `${saludo}, Isaac 👋`;
+// ---- Navigation ----
+function switchPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0,0);
+}
 
-async function loadClima() {
-  try {
-    const r = await fetch('https://wttr.in/Panama+City,Panama?format=j1');
-    const d = await r.json();
-    const cc = d.current_condition[0];
-    document.getElementById('temp').textContent = cc.temp_C + '°C';
-    document.getElementById('clima-desc').textContent = cc.weatherDesc[0].value;
-    const hum = document.getElementById('humedad');
-    hum.textContent = 'Humedad ' + cc.humidity + '%';
-    hum.style.display = 'inline-block';
-  } catch(e) {
-    document.getElementById('temp').textContent = '31°C';
-    document.getElementById('clima-desc').textContent = 'Panama City';
+// ---- Clock ----
+function tick(){
+  const n=new Date();
+  const pty=new Date(n.toLocaleString('en-US',{timeZone:'America/Panama'}));
+  const h=pty.getHours();
+  document.getElementById('clock').textContent=pty.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
+  document.getElementById('greeting').textContent=(h<12?'Buenos días':h<19?'Buenas tardes':'Buenas noches')+', Isaac 👋';
+  const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  document.getElementById('dateStr').textContent=dias[pty.getDay()]+', '+pty.getDate()+' de '+meses[pty.getMonth()];
+  updateCountdown(pty);
+}
+setInterval(tick,1000);tick();
+
+// ---- Streak ----
+function loadStreak(){
+  const today=new Date().toDateString();
+  const data=JSON.parse(localStorage.getItem('isaac_streak')||'{"streak":0,"last":"","history":[]}');
+  if(data.last===today){
+    // already visited today
+  } else if(data.last===new Date(Date.now()-86400000).toDateString()){
+    data.streak++;
+    data.last=today;
+    data.history=[...data.history.slice(-6),1];
+  } else {
+    data.streak=1;
+    data.last=today;
+    data.history=[...data.history.slice(-6),1];
   }
-}
-
-async function loadHoroscopo() {
-  try {
-    const r = await fetch('https://freehoroscopeapi.com/api/v1/get-horoscope/daily?sign=taurus');
-    const d = await r.json();
-    document.getElementById('horoscopo').textContent = d.data.horoscope;
-  } catch(e) {
-    document.getElementById('horoscopo').textContent = 'Venus favorece tus decisiones hoy. Confia en tu intuicion.';
+  localStorage.setItem('isaac_streak',JSON.stringify(data));
+  document.getElementById('streakNum').textContent=data.streak;
+  const msgs=['¡Primer día!','¡Dos días seguidos!','¡3 días — sigue así!','¡Una semana completa! 🔥','¡Imparable!'];
+  document.getElementById('streakMsg').textContent='Día '+data.streak+' — '+(data.streak>=7?'¡Semana completa! 🏆':data.streak>=3?'¡Excelente racha!':'¡Sigue así!');
+  document.getElementById('streakFire').textContent=data.streak>=7?'🏆':data.streak>=3?'🔥':'⭐';
+  const bar=document.getElementById('streakBar');
+  bar.innerHTML='';
+  for(let i=0;i<7;i++){
+    const d=document.createElement('div');
+    d.className='streak-day'+(i<(data.history.length||0)?' done':'')+(i===6?' today':'');
+    bar.appendChild(d);
   }
+  const days=['D','L','M','M','J','V','S'];
+  document.getElementById('streakSub').textContent='Racha de '+data.streak+' día'+(data.streak===1?'':'s')+' consecutivos';
 }
+loadStreak();
 
-async function loadFrase() {
-  try {
-    const r = await fetch('https://zenquotes.io/api/today');
-    const d = await r.json();
-    document.getElementById('frase').textContent = `"${d[0].q}"`;
-    document.getElementById('frase-autor').textContent = `— ${d[0].a}`;
-  } catch(e) {
-    document.getElementById('frase').textContent = '"La unica manera de hacer un gran trabajo es amar lo que haces."';
-    document.getElementById('frase-autor').textContent = '— Steve Jobs';
-  }
-}
-
-async function loadDato() {
-  try {
-    const r = await fetch('https://uselessfacts.jsph.pl/api/v1/facts/random?language=en');
-    const d = await r.json();
-    document.getElementById('dato').textContent = `"${d.text}"`;
-  } catch(e) {
-    document.getElementById('dato').textContent = '"El cerebro humano genera mas impulsos electricos en un dia que todos los telefonos del mundo combinados."';
-  }
-}
-
-async function loadCrypto() {
-  try {
-    const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24hr_change=true');
-    const d = await r.json();
-    const items = [{name:'Bitcoin',id:'bitcoin'},{name:'Ethereum',id:'ethereum'},{name:'Solana',id:'solana'}];
-    document.getElementById('crypto').innerHTML = items.map(i => {
-      const chg = d[i.id].usd_24h_change.toFixed(1);
-      const cls = chg >= 0 ? 'green' : 'red';
-      const sign = chg >= 0 ? '+' : '';
-      return `<div class="row"><span class="row-label">${i.name}</span><div style="text-align:right"><div class="row-val">$${d[i.id].usd.toLocaleString()}</div><span class="pill ${cls}">${sign}${chg}%</span></div></div>`;
-    }).join('');
-  } catch(e) { document.getElementById('crypto').innerHTML = '<div class="loading">No disponible</div>'; }
-}
-
-async function loadNews() {
-  try {
-    const rg = await fetch(`https://newsdata.io/api/1/news?apikey=${NEWS_KEY}&language=en&category=top&size=4`);
-    const dg = await rg.json();
-    if (dg.results) {
-      document.getElementById('news-global').innerHTML = dg.results.map(i =>
-        `<a class="news-link" href="${i.link}" target="_blank"><div class="news-item"><div class="news-title">${i.title}</div><div class="news-src">${i.source_name || 'Global'}</div></div></a>`
-      ).join('');
-    }
-  } catch(e) { document.getElementById('news-global').innerHTML = '<div class="loading">No disponible</div>'; }
-  try {
-    const rp = await fetch(`https://newsdata.io/api/1/news?apikey=${NEWS_KEY}&country=pa&language=es&size=4`);
-    const dp = await rp.json();
-    if (dp.results) {
-      document.getElementById('news-panama').innerHTML = dp.results.map(i =>
-        `<a class="news-link" href="${i.link}" target="_blank"><div class="news-item"><div class="news-title">${i.title}</div><div class="news-src">${i.source_name || 'Panama'}</div></div></a>`
-      ).join('');
-    }
-  } catch(e) { document.getElementById('news-panama').innerHTML = '<div class="loading">No disponible</div>'; }
-}
-
-async function loadMovie() {
-  try {
-    const r = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${TMDB_KEY}&language=es-ES`);
-    const d = await r.json();
-    const diaAnio = Math.floor((panama - new Date(panama.getFullYear(), 0, 0)) / 86400000);
-    const movie = d.results[diaAnio % d.results.length];
-    const poster = movie.poster_path ? `https://image.tmdb.org/t/p/w200${movie.poster_path}` : null;
-    document.getElementById('movie').innerHTML = `
-      <div class="movie-row">
-        <div class="movie-poster">${poster ? `<img src="${poster}" alt="poster">` : '🎬'}</div>
-        <div style="flex:1">
-          <div style="font-size:15px;font-weight:500;margin-bottom:6px;">${movie.title}</div>
-          <div style="display:flex;gap:6px;margin-bottom:8px;">
-            <span class="pill amber">⭐ ${movie.vote_average.toFixed(1)}</span>
-            <span class="pill blue">${movie.release_date?.slice(0,4) || ''}</span>
-          </div>
-          <div class="sub">${movie.overview || 'Sin descripcion disponible.'}</div>
-        </div>
-      </div>`;
-  } catch(e) {
-    document.getElementById('movie').innerHTML = '<div class="loading">No disponible</div>';
-  }
-}
-
-const empleos = [
-  {titulo:"Analista de Datos", empresa:"Panama City", url:"https://www.linkedin.com/jobs/search/?keywords=analista+datos&location=Panama"},
-  {titulo:"Desarrollador Python", empresa:"Remoto", url:"https://www.linkedin.com/jobs/search/?keywords=python+developer&location=Panama"},
-  {titulo:"Gerente de Proyectos TI", empresa:"Panama City", url:"https://www.linkedin.com/jobs/search/?keywords=project+manager+IT&location=Panama"},
-  {titulo:"Marketing Digital", empresa:"Panama City", url:"https://www.linkedin.com/jobs/search/?keywords=marketing+digital&location=Panama"},
-  {titulo:"Data Science", empresa:"Remoto", url:"https://www.linkedin.com/jobs/search/?keywords=data+science&location=Panama"},
-  {titulo:"UX Designer", empresa:"Panama City", url:"https://www.linkedin.com/jobs/search/?keywords=UX+designer&location=Panama"},
+// ---- Countdown ----
+const panEvents=[
+  {name:'Fin de semana',fn:d=>{const n=new Date(d);const diff=(6-n.getDay()+7)%7||7;n.setDate(n.getDate()+diff);n.setHours(0,0,0,0);return n;}},
+  {name:'Fin de mes',fn:d=>{const n=new Date(d.getFullYear(),d.getMonth()+1,1,0,0,0,0);return n;}},
+  {name:'Día de la Madre (11 dic)',fn:d=>{let t=new Date(d.getFullYear(),11,11,0,0,0,0);if(t<=d)t.setFullYear(t.getFullYear()+1);return t;}},
+  {name:'Independencia 3 nov',fn:d=>{let t=new Date(d.getFullYear(),10,3,0,0,0,0);if(t<=d)t.setFullYear(t.getFullYear()+1);return t;}},
+  {name:'Navidad 🎄',fn:d=>{let t=new Date(d.getFullYear(),11,25,0,0,0,0);if(t<=d)t.setFullYear(t.getFullYear()+1);return t;}},
 ];
-document.getElementById('jobs').innerHTML = `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0 24px;">` +
-  empleos.map(j => `<a class="job-link" href="${j.url}" target="_blank"><div class="job-item"><div class="job-title">${j.titulo} ↗</div><div class="job-co">${j.empresa}</div></div></a>`).join('') + `</div>`;
+function updateCountdown(now){
+  let nearest=null,nearestMs=Infinity,nearestName='';
+  panEvents.forEach(e=>{
+    const t=e.fn(now);
+    const ms=t-now;
+    if(ms>0&&ms<nearestMs){nearestMs=ms;nearest=t;nearestName=e.name;}
+  });
+  if(!nearest)return;
+  document.getElementById('nextEvent').textContent='Para: '+nearestName;
+  const s=Math.floor(nearestMs/1000);
+  document.getElementById('cd-d').textContent=Math.floor(s/86400);
+  document.getElementById('cd-h').textContent=Math.floor((s%86400)/3600).toString().padStart(2,'0');
+  document.getElementById('cd-m').textContent=Math.floor((s%3600)/60).toString().padStart(2,'0');
+  document.getElementById('cd-s').textContent=(s%60).toString().padStart(2,'0');
+}
 
-loadClima();
-loadHoroscopo();
-loadFrase();
-loadDato();
-loadCrypto();
+// ---- Weather ----
+async function loadWeather(){
+  try{
+    const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=8.9936&longitude=-79.5197&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m,precipitation,uv_index&timezone=America%2FPanama');
+    const d=await r.json();const c=d.current;
+    const codes={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'🌧',80:'🌦',81:'🌧',82:'⛈',95:'⛈'};
+    const descs={0:'Despejado',1:'Mayormente despejado',2:'Parcialmente nublado',3:'Nublado',45:'Niebla',48:'Niebla',51:'Llovizna',53:'Llovizna moderada',55:'Llovizna intensa',61:'Lluvia ligera',63:'Lluvia moderada',65:'Lluvia fuerte',80:'Chubascos',81:'Chubascos moderados',82:'Chubascos fuertes',95:'Tormenta eléctrica'};
+    document.getElementById('wxIcon').textContent=codes[c.weather_code]||'🌡';
+    document.getElementById('wxTemp').textContent=Math.round(c.temperature_2m)+'°';
+    document.getElementById('wxDesc').textContent=descs[c.weather_code]||'Variable';
+    document.getElementById('wxFeels').textContent='Sensación térmica '+Math.round(c.apparent_temperature)+'°C';
+    document.getElementById('wxDetail').innerHTML=`
+      <div class="wx-cell"><div class="wx-cv">${c.relative_humidity_2m}%</div><div class="wx-cl">Humedad</div></div>
+      <div class="wx-cell"><div class="wx-cv">${Math.round(c.wind_speed_10m)}<span style="font-size:11px"> km/h</span></div><div class="wx-cl">Viento</div></div>
+      <div class="wx-cell"><div class="wx-cv">${c.uv_index||'--'}</div><div class="wx-cl">Índice UV</div></div>`;
+  }catch(e){document.getElementById('wxTemp').textContent='--°';}
+}
+
+// ---- NASA APOD ----
+async function loadNASA(){
+  try{
+    const r=await fetch('https://api.nasa.gov/planetary/apod?api_key='+NASA_KEY);
+    const d=await r.json();
+    if(d.media_type==='image'){
+      const img=document.getElementById('nasaImg');
+      img.src=d.url;img.style.display='block';
+    }
+    document.getElementById('nasaTitle').textContent=d.title||'';
+    document.getElementById('nasaDesc').textContent=(d.explanation||'').slice(0,200)+'...';
+  }catch(e){document.getElementById('nasaTitle').textContent='Sin conexión con NASA';}
+}
+
+// ---- Crypto ----
+async function loadCrypto(){
+  try{
+    const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,ripple,cardano&vs_currencies=usd&include_24hr_change=true');
+    const d=await r.json();
+    const coins=[{id:'bitcoin',sym:'BTC',ico:'₿',bg:'#f7931a'},{id:'ethereum',sym:'ETH',ico:'Ξ',bg:'#627eea'},{id:'solana',sym:'SOL',ico:'◎',bg:'#9945ff'},{id:'ripple',sym:'XRP',ico:'✕',bg:'#346aa9'},{id:'cardano',sym:'ADA',ico:'₳',bg:'#0033ad'}];
+    document.getElementById('cryptoList').innerHTML=coins.map(c=>{
+      const p=d[c.id];if(!p)return'';
+      const ch=(p.usd_24h_change||0).toFixed(2);const up=parseFloat(ch)>=0;
+      return`<div class="cr"><div class="cr-l"><div class="cr-ico" style="background:${c.bg}22;color:${c.bg};font-weight:700;font-size:14px">${c.ico}</div><div><div class="cr-name">${c.sym}</div><div class="cr-sym">${c.id.charAt(0).toUpperCase()+c.id.slice(1)}</div></div></div><div style="text-align:right"><div class="cr-p">$${p.usd.toLocaleString('en-US',{maximumFractionDigits:c.id==='bitcoin'?0:3})}</div><div class="cr-ch" style="color:${up?'var(--gr)':'var(--rd)'}">${up?'↑ +':'↓ '}${Math.abs(ch)}%</div></div></div>`;
+    }).join('');
+  }catch(e){document.getElementById('cryptoList').innerHTML='<div class="ld">Sin datos</div>';}
+}
+
+// ---- Forex ----
+async function loadForex(){
+  try{
+    const r=await fetch('https://api.frankfurter.app/latest?from=USD&to=EUR,GBP,JPY,MXN,COP,CAD');
+    const d=await r.json();
+    const pairs=[['EUR','€'],['GBP','£'],['JPY','¥'],['MXN','MX$'],['COP','COP$'],['CAD','C$']];
+    document.getElementById('forexData').innerHTML=pairs.map(([k,s])=>`<div class="fx-item"><div class="fx-pair">USD → ${k}</div><div class="fx-val">${s}${d.rates[k]?.toFixed(k==='JPY'||k==='COP'?0:2)||'--'}</div></div>`).join('');
+  }catch(e){document.getElementById('forexData').innerHTML='<div class="ld">Sin conexión</div>';}
+}
+
+// ---- AQI ----
+async function loadAQI(){
+  try{
+    const r=await fetch('https://air-quality-api.open-meteo.com/v1/air-quality?latitude=8.9936&longitude=-79.5197&current=us_aqi,pm2_5,carbon_monoxide&timezone=America%2FPanama');
+    const d=await r.json();const aqi=Math.round(d.current.us_aqi);
+    let lbl,col,pct,tip;
+    if(aqi<=50){lbl='Bueno';col='var(--gr)';pct=10;tip='Calidad del aire excelente. Perfecto para actividades al aire libre.';}
+    else if(aqi<=100){lbl='Moderado';col='var(--gd)';pct=35;tip='Calidad aceptable. Personas sensibles pueden sentir leve molestia.';}
+    else if(aqi<=150){lbl='No saludable para grupos sensibles';col='var(--or)';pct=60;tip='Reduce la exposición prolongada al exterior.';}
+    else{lbl='No saludable';col='var(--rd)';pct=80;tip='Evita actividades al aire libre prolongadas.';}
+    document.getElementById('aqiVal').textContent=aqi;
+    document.getElementById('aqiVal').style.color=col;
+    document.getElementById('aqiLbl').textContent=lbl;
+    document.getElementById('aqiN').style.left=pct+'%';
+    document.getElementById('aqiTip').textContent=tip;
+  }catch(e){}
+}
+
+// ---- News ----
+async function loadNews(){
+  try{
+    const rp=await fetch(`https://newsdata.io/api/1/news?apikey=${NEWS_KEY}&country=pa&language=es&size=6`);
+    const dp=await rp.json();
+    if(dp.results?.length){
+      document.getElementById('newsPanama').innerHTML=dp.results.map(i=>`<a class="na" href="${i.link}" target="_blank"><div class="ni"><div class="nt">${i.title}</div><div class="ns">${i.source_name||'Panamá'} · ${ago(i.pubDate)}</div></div></a>`).join('');
+    }
+  }catch(e){document.getElementById('newsPanama').innerHTML='<div class="ld">Sin conexión</div>';}
+  try{
+    const rg=await fetch(`https://newsdata.io/api/1/news?apikey=${NEWS_KEY}&language=en&category=top&size=6`);
+    const dg=await rg.json();
+    if(dg.results?.length){
+      document.getElementById('newsGlobal').innerHTML=dg.results.map(i=>`<a class="na" href="${i.link}" target="_blank"><div class="ni"><div class="nt">${i.title}</div><div class="ns">${i.source_name||'Global'} · ${ago(i.pubDate)}</div></div></a>`).join('');
+    }
+  }catch(e){}
+}
+
+// ---- Movie ----
+async function loadMovie(){
+  try{
+    const r=await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${TMDB_KEY}&language=es-ES`);
+    const d=await r.json();
+    const pty=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Panama'}));
+    const doy=Math.floor((pty-new Date(pty.getFullYear(),0,0))/86400000);
+    const m=d.results[doy%d.results.length];
+    const poster=m.poster_path?`<img src="https://image.tmdb.org/t/p/w200${m.poster_path}" alt="poster" loading="lazy">`:'🎬';
+    document.getElementById('movieCard').innerHTML=`<div class="mv"><div class="mp">${poster}</div><div style="flex:1;min-width:0"><div class="mt">${m.title}</div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px"><span class="pill pa">⭐ ${m.vote_average.toFixed(1)}</span><span class="pill pb">${m.release_date?.slice(0,4)||''}</span></div><div class="md">${(m.overview||'Sin descripción.').slice(0,150)}...</div></div></div>`;
+  }catch(e){document.getElementById('movieCard').innerHTML='<div class="ld">Sin datos</div>';}
+}
+
+// ---- Horoscope ----
+async function loadHoro(){
+  try{
+    const r=await fetch('https://aztro.sameerkumar.website/?sign=taurus&day=today',{method:'POST'});
+    const d=await r.json();
+    const stars=parseInt(d.stars_of_the_day||'4');
+    const starsStr='⭐'.repeat(Math.min(stars,5));
+    document.getElementById('horoCard').innerHTML=`
+      <div style="font-size:24px;margin-bottom:8px">${starsStr}</div>
+      <div style="font-size:14px;color:var(--t2);line-height:1.65;margin-bottom:10px">${d.description||'Día favorable para inversiones y decisiones financieras.'}</div>
+      <div class="g2" style="gap:8px">
+        <div style="background:var(--t4);border-radius:10px;padding:8px 10px"><div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em">Color</div><div style="font-size:13px;font-weight:500;margin-top:2px">${d.color||'Verde'}</div></div>
+        <div style="background:var(--t4);border-radius:10px;padding:8px 10px"><div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em">Número</div><div style="font-size:13px;font-weight:500;margin-top:2px">${d.lucky_number||'7'}</div></div>
+        <div style="background:var(--t4);border-radius:10px;padding:8px 10px"><div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em">Humor</div><div style="font-size:13px;font-weight:500;margin-top:2px">${d.mood||'Optimista'}</div></div>
+        <div style="background:var(--t4);border-radius:10px;padding:8px 10px"><div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em">Compatib.</div><div style="font-size:13px;font-weight:500;margin-top:2px">${d.compatibility||'Virgo'}</div></div>
+      </div>`;
+  }catch(e){
+    document.getElementById('horoCard').innerHTML='<div style="font-size:24px;margin-bottom:8px">⭐⭐⭐⭐</div><div style="font-size:14px;color:var(--t2);line-height:1.65">Venus favorece tus finanzas hoy. Buen día para revisar tus inversiones. Tu intuición está afilada — confía en ella.</div>';
+  }
+}
+
+// ---- Quiz ----
+const quizzes=[
+  {q:'¿Qué significa ETF?',opts:['Exchange Traded Fund','Extra Treasury Fund','Equity Transfer Finance','European Trade Fund'],ans:0,exp:'Un ETF (Exchange Traded Fund) es un fondo que cotiza en bolsa como una acción, pero diversifica en muchos activos a la vez.'},
+  {q:'¿Qué es el interés compuesto?',opts:['Interés solo sobre el capital inicial','Interés sobre capital + intereses acumulados','Un tipo de préstamo bancario','Comisión de un broker'],ans:1,exp:'Einstein lo llamó "la octava maravilla del mundo". Los intereses se reinvierten y generan más intereses sobre sí mismos.'},
+  {q:'¿Qué es el S&P 500?',opts:['500 bancos más grandes','Índice de las 500 empresas más grandes de EE.UU.','Un tipo de criptomoneda','Un fondo de pensiones'],ans:1,exp:'El S&P 500 mide el rendimiento de las 500 empresas más grandes que cotizan en bolsas de EE.UU.'},
+  {q:'¿Qué es un dividendo?',opts:['Una deuda de la empresa','Una parte de las ganancias que la empresa paga a sus accionistas','El precio de una acción','Un tipo de bono'],ans:1,exp:'Los dividendos son pagos regulares que empresas como SCHD hacen a sus accionistas. Son una fuente de ingreso pasivo.'},
+  {q:'¿Qué significa diversificar una cartera?',opts:['Invertir todo en una sola acción','Guardar el dinero en efectivo','Invertir en diferentes activos para reducir el riesgo','Vender todas las inversiones'],ans:2,exp:'No poner todos los huevos en una canasta. Si un activo baja, otros pueden subir y compensar.'},
+  {q:'¿Cuál es la capital de Panamá?',opts:['Ciudad de Panamá','Colón','David','Santiago'],ans:0,exp:'Ciudad de Panamá es la capital y ciudad más poblada de Panamá.'},
+  {q:'¿Qué año se inauguró el Canal de Panamá?',opts:['1904','1914','1924','1934'],ans:1,exp:'El Canal de Panamá fue inaugurado el 15 de agosto de 1914, conectando el Océano Atlántico con el Pacífico.'},
+  {q:'¿Qué es el VOO?',opts:['Una criptomoneda','Un ETF que replica el S&P 500 de Vanguard','Un banco panameño','Un tipo de bono del tesoro'],ans:1,exp:'VOO es uno de los ETFs más populares del mundo. Invierte en las 500 empresas más grandes de EE.UU. con una comisión bajísima.'},
+];
+
+let quizAnswered=false;
+function loadQuiz(){
+  const pty=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Panama'}));
+  const doy=Math.floor((pty-new Date(pty.getFullYear(),0,0))/86400000);
+  const q=quizzes[doy%quizzes.length];
+  quizAnswered=false;
+  document.getElementById('quizContainer').innerHTML=`
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-opts">${q.opts.map((o,i)=>`<button class="quiz-opt" onclick="answerQuiz(${i},${q.ans},'${q.exp.replace(/'/g,"\\'")}',this)">${o}</button>`).join('')}</div>
+    <div class="quiz-result" id="quizExp"></div>`;
+}
+function answerQuiz(idx,ans,exp,btn){
+  if(quizAnswered)return;
+  quizAnswered=true;
+  const opts=document.querySelectorAll('.quiz-opt');
+  opts.forEach((o,i)=>{o.disabled=true;if(i===ans)o.classList.add('correct');else if(i===idx&&idx!==ans)o.classList.add('wrong');});
+  const expEl=document.getElementById('quizExp');
+  expEl.style.display='block';
+  expEl.textContent=idx===ans?'✅ Correcto! '+exp:'❌ Incorrecto. '+exp;
+  const saved=JSON.parse(localStorage.getItem('isaac_quiz')||'{"correct":0,"total":0}');
+  if(idx===ans)saved.correct++;saved.total++;
+  localStorage.setItem('isaac_quiz',JSON.stringify(saved));
+  document.getElementById('quizScore').textContent=`Puntaje: ${saved.correct}/${saved.total} correctas`;
+}
+
+// ---- Word of the day ----
+const words=[
+  {w:'Compound',p:'/ˈkɒmpaʊnd/',t:'adjective/verb',def:'Made up of several parts; or to make something worse. In finance: interest that grows on itself.',ex:'"Compound interest is the most powerful force in investing."'},
+  {w:'Diversify',p:'/daɪˈvɜːrsɪfaɪ/',t:'verb',def:'To spread investments across different assets to reduce risk.',ex:'"You should diversify your portfolio instead of putting everything in one stock."'},
+  {w:'Resilient',p:'/rɪˈzɪliənt/',t:'adjective',def:'Able to recover quickly from difficulties; strong and flexible.',ex:'"The Panama economy has proven resilient despite global challenges."'},
+  {w:'Leverage',p:'/ˈlevərɪdʒ/',t:'noun/verb',def:'Using borrowed money or tools to multiply potential returns (and risks).',ex:'"He used leverage to increase his investment returns, but it also increased the risk."'},
+  {w:'Volatility',p:'/ˌvɒləˈtɪlɪti/',t:'noun',def:'The tendency of something to change rapidly and unpredictably, especially in financial markets.',ex:'"High market volatility means prices can swing dramatically in a single day."'},
+  {w:'Dividend',p:'/ˈdɪvɪdɛnd/',t:'noun',def:'A sum of money paid regularly to shareholders from a company\'s profits.',ex:'"SCHD is known for paying reliable dividends every quarter."'},
+  {w:'Portfolio',p:'/pɔːrtˈfoʊliˌoʊ/',t:'noun',def:'A collection of financial investments like stocks, bonds, and ETFs.',ex:'"His portfolio grew 15% last year thanks to consistent monthly investments."'},
+];
+function loadWord(){
+  const pty=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Panama'}));
+  const doy=Math.floor((pty-new Date(pty.getFullYear(),0,0))/86400000);
+  const w=words[doy%words.length];
+  document.getElementById('wordCard').innerHTML=`
+    <div class="word-main">${w.w}</div>
+    <div class="word-pron">${w.p}</div>
+    <div class="word-type">${w.t}</div>
+    <div class="word-def">${w.def}</div>
+    <div class="word-ex">"${w.ex}"</div>`;
+}
+
+// ---- History ----
+const histEvents=[
+  [{y:1914,e:'Se inaugura el Canal de Panamá, conectando el Atlántico con el Pacífico.'},{y:1973,e:'Pink Floyd lanza "The Dark Side of the Moon".'},{y:1994,e:'Netscape lanza su primer navegador web.'}],
+  [{y:1912,e:'El Titanic parte en su viaje inaugural.'},{y:1955,e:'McDonald\'s abre su primer restaurante franquiciado.'},{y:1998,e:'Google es fundado por Larry Page y Sergey Brin.'}],
+  [{y:1969,e:'Neil Armstrong pisa la Luna.'},{y:1991,e:'Linus Torvalds anuncia el sistema operativo Linux.'},{y:2007,e:'Steve Jobs presenta el primer iPhone.'}],
+  [{y:1903,e:'Panama se independiza de Colombia.'},{y:1976,e:'Apple Computer es fundada por Steve Jobs y Steve Wozniak.'},{y:2004,e:'Facebook es lanzado desde la universidad de Harvard.'}],
+  [{y:1945,e:'Termina la Segunda Guerra Mundial.'},{y:1981,e:'IBM lanza su primera PC personal.'},{y:2009,e:'Se crea Bitcoin — la primera criptomoneda.'}],
+  [{y:1928,e:'Alexander Fleming descubre la penicilina.'},{y:1962,e:'JFK anuncia el programa Apollo para ir a la Luna.'},{y:2010,e:'Apple lanza el iPad, cambiando la industria de las tabletas.'}],
+  [{y:1903,e:'Los hermanos Wright logran el primer vuelo motorizado.'},{y:1971,e:'Intel lanza el primer microprocesador comercial.'},{y:2020,e:'Comienza la pandemia de COVID-19.'}],
+];
+function loadHistory(){
+  const pty=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Panama'}));
+  const doy=Math.floor((pty-new Date(pty.getFullYear(),0,0))/86400000);
+  const events=histEvents[doy%histEvents.length];
+  const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  document.getElementById('histToday').innerHTML=`
+    <div class="hist-date">${pty.getDate()} de ${meses[pty.getMonth()]}</div>
+    ${events.map(e=>`<div class="hist-event"><span class="hist-year">${e.y}</span>${e.e}</div>`).join('')}`;
+}
+
+// ---- Finance tips ----
+const tips=[
+  {n:1,title:'Interés compuesto',body:'$200 hoy + $50/mes al 9% anual = $11,240 en 10 años. No es magia — es el tiempo trabajando para ti. Cuanto antes empieces, más poderoso es el efecto.'},
+  {n:2,title:'Regla del 72',body:'Divide 72 entre tu tasa de retorno para saber cuánto tarda en duplicarse tu dinero. Al 9%, tu dinero se duplica cada 8 años. Al 12%, cada 6 años.'},
+  {n:3,title:'ETFs vs Acciones individuales',body:'Comprar 1 acción de Apple es apostarle a 1 empresa. Comprar VOO es apostarle a las 500 mejores. Los ETFs reducen el riesgo sin reducir los retornos promedio.'},
+  {n:4,title:'Dollar Cost Averaging',body:'Invertir $50 fijos cada mes — sin importar si el mercado sube o baja — reduce el riesgo de comprar en el peor momento. Es la estrategia más probada para inversores normales.'},
+  {n:5,title:'Qué son los dividendos',body:'Empresas como las que compone SCHD reparten parte de sus ganancias entre sus accionistas. Con $200 en SCHD recibirás centavos, pero reinvertidos durante 10 años, se convierten en algo real.'},
+  {n:6,title:'Qué es el VIX',body:'El VIX mide el "miedo" del mercado. Cuando es alto (+30), hay pánico — y los ETFs están baratos. Cuando es bajo, el mercado está tranquilo. Es tu señal de cuándo comprar más.'},
+  {n:7,title:'Impuestos en Panamá',body:'Panamá tiene un sistema territorial — no pagas impuestos sobre ingresos generados fuera del país. Las ganancias de tus ETFs en eToro no están sujetas a impuestos panameños.'},
+];
+function loadFinTip(){
+  const pty=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Panama'}));
+  const doy=Math.floor((pty-new Date(pty.getFullYear(),0,0))/86400000);
+  const t=tips[doy%tips.length];
+  document.getElementById('finTip').innerHTML=`
+    <div class="tip-num">${t.n}</div>
+    <div class="tip-title">${t.title}</div>
+    <div class="tip-body">${t.body}</div>`;
+}
+
+// ---- Fact ----
+async function loadFact(){
+  try{
+    const r=await fetch('https://uselessfacts.jsph.pl/api/v1/facts/random?language=en');
+    const d=await r.json();
+    document.getElementById('factTxt').textContent='"'+d.text+'"';
+  }catch(e){
+    const facts=['"Los pulpos tienen 3 corazones y sangre azul."','"La Torre Eiffel crece 15 cm en verano por dilatación térmica."','"El cerebro humano tiene más conexiones que estrellas en la Vía Láctea."'];
+    document.getElementById('factTxt').textContent=facts[Math.floor(Math.random()*facts.length)];
+  }
+}
+
+// ---- Quote ----
+const quotes=[
+  {q:'La única manera de hacer un gran trabajo es amar lo que haces.',a:'Steve Jobs'},
+  {q:'El éxito no es definitivo, el fracaso no es fatal. Lo que cuenta es el coraje de continuar.',a:'Winston Churchill'},
+  {q:'No importa lo lento que vayas, siempre y cuando no te detengas.',a:'Confucio'},
+  {q:'La inversión más importante que puedes hacer es en ti mismo.',a:'Warren Buffett'},
+  {q:'El dinero es una herramienta. Usado correctamente, puede hacer cualquier cosa.',a:'Ayn Rand'},
+  {q:'No esperes condiciones perfectas para comenzar. Comienza y crea las condiciones.',a:'Anónimo'},
+  {q:'Un inversor sin un plan es como un arquitecto sin planos.',a:'Peter Lynch'},
+];
+function loadQuote(){
+  const pty=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Panama'}));
+  const doy=Math.floor((pty-new Date(pty.getFullYear(),0,0))/86400000);
+  const q=quotes[doy%quotes.length];
+  document.getElementById('fraseText').textContent='"'+q.q+'"';
+  document.getElementById('fraseAutor').textContent='— '+q.a;
+}
+
+// ---- Utils ----
+function ago(dateStr){
+  if(!dateStr)return'';
+  try{const diff=Math.floor((Date.now()-new Date(dateStr))/60000);return diff<60?`hace ${diff}m`:diff<1440?`hace ${Math.floor(diff/60)}h`:`hace ${Math.floor(diff/1440)}d`;}catch{return'';}
+}
+
+// ---- Init ----
+loadWeather();
+loadNASA();
 loadNews();
+loadCrypto();
+loadForex();
+loadAQI();
 loadMovie();
+loadHoro();
+loadQuiz();
+loadWord();
+loadHistory();
+loadFinTip();
+loadFact();
+loadQuote();
+
+// Auto refresh intervals
+setInterval(loadCrypto,60000);
+setInterval(loadWeather,10*60*1000);
+setInterval(loadAQI,10*60*1000);
+setInterval(loadForex,60*60*1000);
+setInterval(loadNews,15*60*1000);
 </script>
 </body>
 </html>
